@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Generator grafik - makieta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Google+Sans+Flex:opsz,wght@6..144,300..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F0F4F9; --card:#FFFFFF; --edge:#C3CEDE; --edge-2:#DADCE0; --rule:#E3E6EA; --hair:#EEF1F4;
+  --ink:#111318; --ink2:#454B54; --muted:#5A616A; --muted-2:#5F6368;
+  --acc:#0B57D0; --acc-dark:#0842A0; --acc-soft:#D3E3FD;
+  --good:#146C2E; --good-soft:#E6F4EA; --bad:#B3261E; --bad-soft:#FCE8E6; --warn:#9A3412; --warn-soft:#FEEFE3;
+  --r-card:28px; --r-box:20px; --bar-h:64px;
+  --fg:"Google Sans Flex","Google Sans Text","Google Sans",Roboto,Arial,sans-serif;
+  --f:Figtree,system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:0;line-height:0}
+body>*{font-size:15px;line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit}
+
+/* pasek makiety (nie jest cz&#281;&#347;ci&#261; aplikacji) */
+.mk{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;gap:6px;align-items:center;background:#1F1F1F;color:#fff;border-radius:999px;padding:6px 6px 6px 16px;font:500 13px var(--fg)}
+.mk button{border:0;border-radius:999px;padding:7px 14px;background:#3C4043;color:#fff;cursor:pointer;font-weight:600}
+.mk button.on{background:#fff;color:#1F1F1F}
+
+/* pow&#322;oka */
+.appbar{position:fixed;inset:0 0 auto 0;height:var(--bar-h);background:#fff;border-bottom:1px solid var(--edge-2);display:flex;align-items:center;gap:14px;padding:0 24px;z-index:20}
+.tile{width:32px;height:32px;border-radius:9px;background:var(--acc);display:grid;place-items:center}
+.tile svg{width:19px;height:19px;fill:#fff}
+.appname{font:400 22px var(--fg);color:#1F1F1F}
+.appbar .sp{flex:1}
+.who{font:500 14px var(--fg);color:var(--muted-2)}
+.rail{position:fixed;top:var(--bar-h);bottom:0;left:0;width:80px;background:#fff;border-right:1px solid var(--edge-2);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:14px;z-index:10}
+.ri{display:flex;flex-direction:column;align-items:center;gap:4px;font:500 11px var(--fg);color:var(--muted-2);cursor:pointer}
+.ri .pill{width:56px;height:32px;border-radius:999px;display:grid;place-items:center}
+.ri svg{width:20px;height:20px;fill:currentColor}
+.ri.on{color:var(--acc-dark)} .ri.on .pill{background:var(--acc-soft)} .ri.on span{font-weight:700}
+.ri:hover .pill{background:var(--hair)}
+.rail .bottom{margin-top:auto}
+main{margin:var(--bar-h) 0 0 80px;padding:28px 32px 40px}
+
+/* karty */
+.hero{background:#fff;border:1px solid var(--edge);border-radius:var(--r-card);padding:26px 36px 24px;display:flex;align-items:flex-end;gap:32px}
+.hero .txt{flex:1;min-width:0}
+.kicker{font:600 13.5px var(--f);color:var(--muted)}
+.title{font:800 40px/1.1 var(--f);letter-spacing:-.02em;margin:6px 0 8px}
+.title em{font-style:normal;color:var(--acc)}
+.lead{font:400 16px var(--f);color:var(--ink2)}
+.card{background:#fff;border:1px solid var(--edge);border-radius:var(--r-card);padding:24px 30px 26px}
+.card h3{font:700 20px var(--f);display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.card h3 small{font:500 13px var(--f);color:var(--muted)}
+.btn{height:40px;border-radius:999px;border:1px solid var(--edge-2);background:#fff;color:var(--acc);font:600 14px var(--f);padding:0 18px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--hair)}
+.btn.main{height:44px;background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700;font-size:14.5px;padding:0 22px}
+.btn.main:hover{background:var(--acc-dark)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:34px;border-radius:17px;border:1px solid #D4DDE9;background:#fff;padding:0 14px;font:650 13.5px var(--f);color:var(--ink2);display:inline-flex;align-items:center;cursor:pointer}
+.chip.on{background:var(--acc-soft);border-color:var(--acc-soft);color:var(--acc-dark)}
+label.f{display:block;font:600 13px var(--f);color:var(--muted);margin:0 0 6px}
+textarea,input.t{width:100%;border:1px solid var(--edge-2);border-radius:14px;padding:12px 14px;background:#fff;font:400 15px/1.5 var(--f);resize:none}
+textarea:focus,input.t:focus{outline:2px solid var(--acc);outline-offset:-1px;border-color:transparent}
+
+/* pytania modelu */
+.qa{display:grid;gap:14px}
+.q{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start}
+.q .ico{width:32px;height:32px;border-radius:50%;background:var(--acc-soft);color:var(--acc-dark);display:grid;place-items:center;font:700 14px var(--f)}
+.q .ask{font:600 15.5px var(--f);margin:5px 0 8px}
+.note{display:flex;gap:12px;align-items:flex-start;background:var(--warn-soft);border-radius:var(--r-box);padding:14px 18px;color:var(--warn);font:500 14.5px/1.45 var(--f)}
+.note b{color:var(--warn)}
+
+/* pola grafiki */
+.fields{display:grid;gap:14px}
+.fld{position:relative}
+.fld .cnt{position:absolute;right:14px;top:34px;font:600 12.5px var(--f);color:var(--muted);font-variant-numeric:tabular-nums}
+.fld .cnt.full{color:var(--warn)} .fld .cnt.over{color:var(--bad)}
+.fld input.t{padding-right:72px}
+.fld.over input.t{border-color:var(--bad);background:var(--bad-soft)}
+.fld .err{font:500 13px var(--f);color:var(--bad);margin-top:5px;display:none}
+.fld.over .err{display:block}
+
+/* zdj&#281;cia */
+.photos{display:grid;grid-template-columns:repeat(4,168px);gap:14px}
+.ph{position:relative;border-radius:16px;overflow:hidden;border:3px solid transparent;cursor:pointer;aspect-ratio:4/5;background:#ddd}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.on{border-color:var(--acc)}
+.ph .src{position:absolute;left:8px;bottom:8px;background:rgba(17,19,24,.72);color:#fff;font:600 11.5px var(--f);padding:3px 8px;border-radius:999px}
+.ph .tick{position:absolute;right:8px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--acc);display:none;place-items:center}
+.ph.on .tick{display:grid}
+.ph .tick svg{width:16px;height:16px;fill:#fff}
+
+/* podgl&#261;d */
+.preview{display:flex;flex-direction:column;align-items:center;gap:14px}
+.preview .art{border-radius:12px;overflow:hidden;border:1px solid var(--edge);background:#121212}
+.preview .art img{display:block;width:100%;height:100%;object-fit:cover}
+.state{display:inline-flex;align-items:center;gap:8px;height:30px;border-radius:999px;padding:0 12px;background:var(--good-soft);color:var(--good);font:600 13px var(--f)}
+.state i{width:8px;height:8px;border-radius:50%;background:var(--good)}
+
+/* ===== wariant A: kreator ===== */
+.steps{display:flex;gap:8px;align-items:center}
+.step{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 8px;border-radius:999px;background:var(--paper);border:1px solid var(--rule);font:600 14px var(--f);color:var(--muted);cursor:pointer;white-space:nowrap}
+.step .n{width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--edge-2);display:grid;place-items:center;font:700 13px var(--f)}
+.step.done .n{background:var(--good);border-color:var(--good);color:#fff}
+.step.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(60,64,67,.15),0 1px 3px rgba(60,64,67,.1)}
+.step.on .n{background:var(--acc);border-color:var(--acc);color:#fff}
+.a-body{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:22px;align-items:start}
+.a-side .card{padding:22px 24px}
+.a-side .mini{font:500 14px/1.5 var(--f);color:var(--ink2)}
+.a-side .mini b{color:var(--ink)}
+.a-foot{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.pane{display:none} .pane.on{display:block}
+.a-final{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start}
+.a-final .art{width:520px;height:650px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:10px 18px;font:500 15px var(--f)}
+.kv dt{color:var(--muted)} .kv dd{color:var(--ink)}
+
+/* ===== wariant B: jeden ekran ===== */
+.b-grid{display:grid;grid-template-columns:minmax(0,1fr) 600px;gap:24px;margin-top:22px;align-items:start}
+.b-left{display:grid;gap:18px}
+.b-right{position:sticky;top:calc(var(--bar-h) + 28px)}
+.b-right .card{padding:22px 24px 24px}
+.b-right .art{width:480px;height:600px}
+.b-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.compact textarea{height:104px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="tile"><svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></svg></div>
+  <div class="appname">Generator grafik</div>
+  <div class="sp"></div>
+  <div class="who">Redakcja cyfrowe.pl</div>
+</header>
+
+<nav class="rail">
+  <div class="ri on"><div class="pill"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div><span>Nowa</span></div>
+  <div class="ri"><div class="pill"><svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.9 3.9L9 12H6a7 7 0 1 1 2.1 5l-1.4 1.4A9 9 0 1 0 13 3zm-1 5v5l4.3 2.5.7-1.2-3.5-2.1V8H12z"/></svg></div><span>Historia</span></div>
+  <div class="ri"><div class="pill"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg></div><span>Szablony</span></div>
+  <div class="ri bottom"><div class="pill"><svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.6 3.8 10.7 9 12 5.2-1.3 9-6.4 9-12V5l-9-4z"/></svg></div><span>Dost&#281;p</span></div>
+</nav>
+
+<!-- ===================== WARIANT A ===================== -->
+<main id="wA">
+  <section class="hero">
+    <div class="txt">
+      <div class="kicker">Nowa grafika &#183; grupa Strefa Mi&#322;o&#347;nik&#243;w Canona</div>
+      <div class="title">Konkurs: <em>&#346;wiat&#322;o i cie&#324;</em></div>
+      <div class="lead" id="aLead">Wklej tekst postu. Model dopyta o brakuj&#261;ce rzeczy, a Canva z&#322;o&#380;y grafik&#281; wed&#322;ug szablonu serii.</div>
+    </div>
+    <div class="steps" id="aSteps">
+      <div class="step done" data-s="1"><span class="n">1</span>Post</div>
+      <div class="step on" data-s="2"><span class="n">2</span>Pytania</div>
+      <div class="step" data-s="3"><span class="n">3</span>Tekst i zdj&#281;cie</div>
+      <div class="step" data-s="4"><span class="n">4</span>Grafika</div>
+    </div>
+  </section>
+
+  <div class="a-body">
+    <div>
+      <!-- krok 1 -->
+      <div class="pane" data-p="1">
+        <div class="card">
+          <h3>Tekst postu <small>wklej tak, jak p&#243;jdzie na Facebooka</small></h3>
+          <textarea id="aPost" style="height:190px"></textarea>
+          <div class="two" style="margin-top:18px">
+            <div><label class="f">Rodzaj postu</label>
+              <div class="chips"><span class="chip">Pytanie</span><span class="chip">Poradnik</span><span class="chip on">Konkurs</span><span class="chip">Oferta</span></div></div>
+            <div><label class="f">Co ma by&#263; na grafice? <span style="font-weight:500">(opcjonalnie)</span></label>
+              <input class="t" value="Zdj&#281;cie z mocnym kontrastem, bez sprz&#281;tu w kadrze"></div>
+          </div>
+        </div>
+      </div>
+      <!-- krok 2 -->
+      <div class="pane on" data-p="2">
+        <div class="card">
+          <h3>Pytania modelu <small>odpowiedz, &#380;eby grafika i post m&#243;wi&#322;y to samo</small></h3>
+          <div class="qa" id="aQa"></div>
+          <div class="note" style="margin-top:18px"><svg width="20" height="20" viewBox="0 0 24 24" style="flex:none;fill:currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+            <div><b>Warunek &#8222;zapro&#347; znajomego&#8221; &#322;amie zasady Facebooka dla konkurs&#243;w.</b> Proponuj&#281; zostawi&#263; go jako zach&#281;t&#281;, a nie warunek udzia&#322;u.</div></div>
+        </div>
+      </div>
+      <!-- krok 3 -->
+      <div class="pane" data-p="3">
+        <div class="card">
+          <h3>Tekst na grafik&#281; <small>model napisa&#322;, Ty mo&#380;esz poprawi&#263;</small></h3>
+          <div class="fields two" id="aFields"></div>
+        </div>
+        <div class="card" style="margin-top:18px">
+          <h3>Zdj&#281;cie <small>kliknij, &#380;eby wybra&#263;</small></h3>
+          <div class="photos" id="aPhotos"></div>
+        </div>
+      </div>
+      <!-- krok 4 -->
+      <div class="pane" data-p="4">
+        <div class="card a-final">
+          <div class="preview"><div class="art"><img src="img/grafika-konkurs.jpg" alt="Grafika konkursu &#346;wiat&#322;o i cie&#324;"></div></div>
+          <div>
+            <span class="state"><i></i>Z&#322;o&#380;ona w Canvie</span>
+            <h3 style="margin-top:16px">Grafika gotowa</h3>
+            <dl class="kv">
+              <dt>Szablon</dt><dd>Seria grupy Canona, 1080 x 1350</dd>
+              <dt>Nag&#322;&#243;wek</dt><dd>&#346;WIAT&#321;O I CIE&#323;</dd>
+              <dt>Podtytu&#322;</dt><dd>Zg&#322;oszenia do niedzieli</dd>
+              <dt>Zdj&#281;cie</dt><dd>Unsplash, autor podany w opisie posta</dd>
+              <dt>Zapisano</dt><dd>Dysk: Grafiki / Grupa Canona / 2026-11</dd>
+            </dl>
+            <div class="b-actions" style="justify-content:flex-start;margin-top:26px">
+              <button class="btn main">Pobierz PNG</button>
+              <button class="btn">Otw&#243;rz w Canvie</button>
+              <button class="btn" data-go="3">Popraw tekst</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="a-foot">
+        <button class="btn" id="aBack">Wstecz</button>
+        <button class="btn main" id="aNext">Dalej</button>
+      </div>
+    </div>
+
+    <aside class="a-side">
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:10px">Post</h3>
+        <div class="mini" id="aPostMini"></div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ===================== WARIANT B ===================== -->
+<main id="wB" class="hidden">
+  <section class="hero" style="padding:22px 36px 20px">
+    <div class="txt">
+      <div class="kicker">Nowa grafika &#183; grupa Strefa Mi&#322;o&#347;nik&#243;w Canona</div>
+      <div class="title" style="font-size:34px">Konkurs: <em>&#346;wiat&#322;o i cie&#324;</em></div>
+    </div>
+    <div class="chips"><span class="chip">Pytanie</span><span class="chip">Poradnik</span><span class="chip on">Konkurs</span><span class="chip">Oferta</span></div>
+  </section>
+
+  <div class="b-grid">
+    <div class="b-left">
+      <div class="card compact">
+        <h3>Tekst postu</h3>
+        <textarea id="bPost"></textarea>
+      </div>
+      <div class="card">
+        <h3>Pytania modelu <small>3 z 3 z odpowiedzi&#261;</small></h3>
+        <div class="qa" id="bQa"></div>
+        <div class="note" style="margin-top:16px"><svg width="20" height="20" viewBox="0 0 24 24" style="flex:none;fill:currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          <div><b>Warunek &#8222;zapro&#347; znajomego&#8221; &#322;amie zasady Facebooka dla konkurs&#243;w.</b> Proponuj&#281; zostawi&#263; go jako zach&#281;t&#281;.</div></div>
+      </div>
+      <div class="card">
+        <h3>Tekst na grafik&#281;</h3>
+        <div class="fields two" id="bFields"></div>
+      </div>
+      <div class="card">
+        <h3>Zdj&#281;cie</h3>
+        <div class="photos" id="bPhotos"></div>
+      </div>
+    </div>
+
+    <div class="b-right">
+      <div class="card preview">
+        <div class="art"><img src="img/grafika-konkurs.jpg" alt="Grafika konkursu &#346;wiat&#322;o i cie&#324;"></div>
+        <div class="b-actions">
+          <button class="btn main">Z&#322;&#243;&#380; grafik&#281; w Canvie</button>
+          <button class="btn">Otw&#243;rz w Canvie</button>
+          <button class="btn">Pobierz PNG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="mk">Makieta
+  <button id="mkA" class="on">A: kreator</button>
+  <button id="mkB">B: jeden ekran</button>
+</div>
+
+<script>
+var POST = "Ruszamy z pierwszym konkursem w naszej od\u015bwie\u017conej Strefie! Temat: '\u015awiat\u0142o i Cie\u0144'. Zasady s\u0105 proste: 1. Wrzu\u0107 w komentarzu zdj\u0119cie wykonane Canonem pasuj\u0105ce do tematu. 2. Zapro\u015b do grupy jednego znajomego fotografa, kt\u00f3remu przyda\u0142aby si\u0119 dawka wiedzy. Do wygrania (np. zestaw czyszcz\u0105cy / voucher do cyfrowe.pl). Czekamy na Wasze prace do niedzieli!";
+var QA = [
+  ["Co jest nagrod\u0105?", "Zestaw do czyszczenia matrycy"],
+  ["Do kiedy dok\u0142adnie przyjmujemy zdj\u0119cia?", "Do niedzieli 15 listopada, do 23:59"],
+  ["Gdzie b\u0119dzie regulamin?", "W pierwszym komentarzu pod postem"]
+];
+var FIELDS = [
+  ["Nag\u0142\u00f3wek", "\u015aWIAT\u0141O I CIE\u0143", 19],
+  ["Podtytu\u0142", "Zg\u0142oszenia do niedzieli", 35],
+  ["Stopka z lewej", "KONKURS - We\u017a udzia\u0142!", 22],
+  ["Stopka z prawej", "Regulamin w komentarzu", 22]
+];
+var PHOTOS = [["img/z1.jpg","Unsplash"],["img/z2.jpg","Unsplash"],["img/z3.jpg","Unsplash"],["img/z4.jpg","Unsplash"]];
+var TICK = '<svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>';
+
+function qa(el){
+  el.innerHTML = QA.map(function(x,i){
+    return '<div class="q"><div class="ico">'+(i+1)+'</div><div><div class="ask">'+x[0]+'</div><input class="t" value="'+x[1]+'"></div></div>';
+  }).join('');
+}
+function fields(el){
+  el.innerHTML = FIELDS.map(function(x){
+    return '<div class="fld"><label class="f">'+x[0]+'</label><input class="t" data-max="'+x[2]+'" value="'+x[1]+'"><span class="cnt"></span><div class="err">Za d\u0142ugie. Canva zawinie tekst i na\u0142o\u017cy go na zdj\u0119cie.</div></div>';
+  }).join('');
+  el.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', function(){count(i)}); count(i); });
+}
+function count(i){
+  var n = i.value.length, m = +i.dataset.max, f = i.parentNode, c = f.querySelector('.cnt');
+  c.textContent = n + ' / ' + m;
+  c.className = 'cnt' + (n > m ? ' over' : n === m ? ' full' : '');
+  f.classList.toggle('over', n > m);
+}
+function photos(el){
+  el.innerHTML = PHOTOS.map(function(p,i){
+    return '<div class="ph'+(i===0?' on':'')+'"><img src="'+p[0]+'" alt=""><span class="src">'+p[1]+'</span><span class="tick">'+TICK+'</span></div>';
+  }).join('');
+  el.querySelectorAll('.ph').forEach(function(p){ p.onclick = function(){ el.querySelectorAll('.ph').forEach(function(x){x.classList.remove('on')}); p.classList.add('on'); }; });
+}
+
+document.getElementById('aPost').value = POST;
+document.getElementById('bPost').value = POST;
+document.getElementById('aPostMini').textContent = POST;
+qa(document.getElementById('aQa')); qa(document.getElementById('bQa'));
+fields(document.getElementById('aFields')); fields(document.getElementById('bFields'));
+photos(document.getElementById('aPhotos')); photos(document.getElementById('bPhotos'));
+
+var step = 2;
+var LEAD = {
+  1: "Wklej tekst postu i wybierz jego rodzaj.",
+  2: "Model przeczyta\u0142 post i pyta o rzeczy, kt\u00f3rych brakuje.",
+  3: "Sprawd\u017a tekst na grafik\u0119 i wybierz zdj\u0119cie.",
+  4: "Grafika jest w Canvie i na Dysku."
+};
+function go(s){
+  step = Math.max(1, Math.min(4, s));
+  document.querySelectorAll('#wA .pane').forEach(function(p){ p.classList.toggle('on', +p.dataset.p === step); });
+  document.querySelectorAll('#aSteps .step').forEach(function(x){
+    var n = +x.dataset.s; x.className = 'step' + (n < step ? ' done' : n === step ? ' on' : '');
+  });
+  document.getElementById('aLead').textContent = LEAD[step];
+  document.getElementById('aBack').style.visibility = step === 1 ? 'hidden' : 'visible';
+  document.querySelector('.a-foot').style.display = step === 4 ? 'none' : 'flex';
+  document.querySelector('.a-side').style.visibility = step === 1 ? 'hidden' : 'visible';
+  var nx = document.getElementById('aNext');
+  nx.textContent = step === 3 ? 'Z\u0142\u00f3\u017c grafik\u0119 w Canvie' : 'Dalej';
+  nx.style.visibility = step === 4 ? 'hidden' : 'visible';
+}
+document.getElementById('aNext').onclick = function(){ go(step + 1); };
+document.getElementById('aBack').onclick = function(){ go(step - 1); };
+document.querySelectorAll('#aSteps .step').forEach(function(x){ x.onclick = function(){ go(+x.dataset.s); }; });
+document.querySelectorAll('[data-go]').forEach(function(b){ b.onclick = function(){ go(+b.dataset.go); }; });
+
+function variant(v){
+  document.getElementById('wA').classList.toggle('hidden', v !== 'A');
+  document.getElementById('wB').classList.toggle('hidden', v !== 'B');
+  document.getElementById('mkA').classList.toggle('on', v === 'A');
+  document.getElementById('mkB').classList.toggle('on', v === 'B');
+  history.replaceState(null, '', '?wariant=' + v + (v === 'A' ? '&krok=' + step : ''));
+}
+document.getElementById('mkA').onclick = function(){ variant('A'); };
+document.getElementById('mkB').onclick = function(){ variant('B'); };
+var qs = new URLSearchParams(location.search);
+if (qs.get('krok')) step = +qs.get('krok');
+go(step);
+variant(qs.get('wariant') === 'B' ? 'B' : 'A');
+</script>
+</body>
+</html>
